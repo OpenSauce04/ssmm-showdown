@@ -2091,19 +2091,19 @@ BattleScene = function () {
  
             
       case 1:
-        this.bgm = BattleSound.loadBgm('https://opensauce04.github.io/ssmm-showdown/xy-elite4.mp3', 133673, 261675, this.bgm);
+        this.bgm = BattleSound.loadBgm('https://github.com/OpenSauce04/ssmm-showdown/raw/master/music/xy-elite4.mp3', 133673, 261675, this.bgm);
         break;
       case 2:
-        this.bgm = BattleSound.loadBgm('https://opensauce04.github.io/ssmm-showdown/bw-n-final.mp3', 42532, 129714, this.bgm);
+        this.bgm = BattleSound.loadBgm('https://github.com/OpenSauce04/ssmm-showdown/raw/master/music/bw-n-final.mp3', 42532, 129714, this.bgm);
         break;
       case 3:
-        this.bgm = BattleSound.loadBgm('https://opensauce04.github.io/ssmm-showdown/bdsp-giratina.mp3', 60527, 164162, this.bgm);
+        this.bgm = BattleSound.loadBgm('https://github.com/OpenSauce04/ssmm-showdown/raw/master/music/bdsp-giratina.mp3', 60527, 164162, this.bgm);
         break;
       case 4:
-        this.bgm = BattleSound.loadBgm('https://opensauce04.github.io/ssmm-showdown/b2w2-plasma.mp3', 57290, 142573, this.bgm);
+        this.bgm = BattleSound.loadBgm('https://github.com/OpenSauce04/ssmm-showdown/raw/master/music/b2w2-plasma.mp3', 57290, 142573, this.bgm);
         break;
       case 5:
-        this.bgm = BattleSound.loadBgm('https://opensauce04.github.io/ssmm-showdown/bdsp-galactic-admin.mp3', 119450, 176991, this.bgm);
+        this.bgm = BattleSound.loadBgm('https://github.com/OpenSauce04/ssmm-showdown/raw/master/music/bdsp-galactic-admin.mp3', 119450, 176991, this.bgm);
         break;
       
       case 6:
