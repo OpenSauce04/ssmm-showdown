@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sauce's Showdown Music Mod
 // @namespace    https://github.com/OpenSauce04/ssmm-showdown/
-// @version      0.3
+// @version      0.4
 // @description  A replacement of the Pokemon Showdown battle music with many other tracks from the Pokemon series
 // @author       OpenSauce
 // @match        https://play.pokemonshowdown.com/*
