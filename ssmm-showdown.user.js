@@ -9,12 +9,12 @@
 // @grant        none
 // @license      AGPL-3.0; https://github.com/smogon/pokemon-showdown-client/blob/master/LICENSE 
 // ==/UserScript==
- 
+
 // == PART 1 ==
- 
+
 var
   BattleBGM = function () {
- 
+
     function BattleBGM(url, loopstart, loopend) {
       this.sound = void 0;
       this.url = void 0;
@@ -56,11 +56,11 @@ var
       this.pause();
     };
     _proto.
- 
+
     actuallyResume = function actuallyResume() {
       if (this !== BattleSound.currentBgm()) return;
       if (this.isActuallyPlaying) return;
- 
+
       if (!this.sound) this.sound = BattleSound.getSoundSpecial(this.url);
       if (!this.sound) return;
       if (this.willRewind) this.sound.currentTime = 0;
@@ -78,27 +78,27 @@ var
       this.updateTime();
     };
     _proto.
- 
- 
- 
+
+
+
     updateTime = function updateTime() {
       var _this = this;
       clearTimeout(this.timer);
       this.timer = undefined;
       if (this !== BattleSound.currentBgm()) return;
       if (!this.sound) return;
- 
+
       var progress = this.sound.currentTime * 1000;
       if (progress > this.loopend - 1000) {
         this.sound.currentTime -= (this.loopend - this.loopstart) / 1000;
       }
- 
+
       this.timer = setTimeout(function () {
         _this.updateTime();
       }, Math.max(this.loopend - progress, 1));
     };
     BattleBGM.
- 
+
     update = function update() {
       var current = BattleSound.currentBgm();
       for (var _i = 0, _BattleSound$bgm =
@@ -115,185 +115,189 @@ var
     };
     return BattleBGM;
   }();
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // == PART 2 ==
- 
+
 var BattleSound = new(function () {
-	function _class2() {
-		this.
-		soundCache = {};
-		this.
- 
-		bgm = [];
-		this.
- 
- 
-		effectVolume = 50;
-		this.
-		bgmVolume = 50;
-		this.
-		muted = false;
-	}
-	var _proto2 = _class2.prototype;
-  	_proto2.
- 
-	getSound = function getSound(url) {
-		if (!window.HTMLAudioElement) return;
-		if (this.soundCache[url]) return this.soundCache[url];
-		try {
-			var sound = document.createElement('audio');
-			sound.src = 'https://' + Config.routes.client + '/' + url;
-			sound.volume = this.effectVolume / 100;
-			this.soundCache[url] = sound;
-			return sound;
-		} catch (_unused) {console.log(_unused)}
-    };
-  	_proto2.
- 
-	getSoundSpecial = function getSoundSpecial(url) {
-		if (!window.HTMLAudioElement) return;
-		if (this.soundCache[url]) return this.soundCache[url];
-		try {
-			var sound = document.createElement('audio');
-			sound.src = url;
-			sound.volume = this.effectVolume / 100;
-			this.soundCache[url] = sound;
-			return sound;
-		} catch (_unused) {console.log(_unused)}
-    };
-	_proto2.
- 
-	playEffect = function playEffect(url) {
-		this.playSound(url, this.muted ? 0 : this.effectVolume);
-	};
-	_proto2.
- 
-	playSound = function playSound(url, volume) {
-		if (!volume) return;
-		var effect = this.getSound(url);
-		if (effect) {
-			effect.volume = volume / 100;
-			effect.play();
-		}
-	};
-	_proto2.
- 
- 
-	loadBgm = function loadBgm(url, loopstart, loopend, replaceBGM) {
-		if (replaceBGM) {
-			replaceBGM.stop();
-			this.deleteBgm(replaceBGM);
-		}
- 
-		var bgm = new BattleBGM(url, loopstart, loopend);
-		this.bgm.push(bgm);
-		return bgm;
-	};
-	_proto2.
-	deleteBgm = function deleteBgm(bgm) {
-		var soundIndex = BattleSound.bgm.indexOf(bgm);
-		if (soundIndex >= 0) BattleSound.bgm.splice(soundIndex, 1);
-	};
-	_proto2.
- 
-	currentBgm = function currentBgm() {
-		if (!this.bgmVolume || this.muted) return false;
-		for (var _i2 = 0, _this$bgm =
-				this.bgm; _i2 < _this$bgm.length; _i2++) {
-			var bgm = _this$bgm[_i2];
-			if (bgm.isPlaying) return bgm;
-		}
-		return null;
-	};
-	_proto2.
- 
- 
-	setMute = function setMute(muted) {
-		muted = !!muted;
-		if (this.muted === muted) return;
-		this.muted = muted;
-		BattleBGM.update();
-	};
-	_proto2.
- 
-	loudnessPercentToAmplitudePercent = function loudnessPercentToAmplitudePercent(loudnessPercent) {
- 
-		var decibels = 10 * Math.log(loudnessPercent / 100) / Math.log(2);
-		return Math.pow(10, decibels / 20) * 100;
-	};
-	_proto2.
-	setBgmVolume = function setBgmVolume(bgmVolume) {
-		this.bgmVolume = this.loudnessPercentToAmplitudePercent(bgmVolume);
-		BattleBGM.update();
-	};
-	_proto2.
-	setEffectVolume = function setEffectVolume(effectVolume) {
-		this.effectVolume = this.loudnessPercentToAmplitudePercent(effectVolume);
-	};
-	return _class2;
+  function _class2() {
+    this.
+    soundCache = {};
+    this.
+
+    bgm = [];
+    this.
+
+
+    effectVolume = 50;
+    this.
+    bgmVolume = 50;
+    this.
+    muted = false;
+  }
+  var _proto2 = _class2.prototype;
+  _proto2.
+
+  getSound = function getSound(url) {
+    if (!window.HTMLAudioElement) return;
+    if (this.soundCache[url]) return this.soundCache[url];
+    try {
+      var sound = document.createElement('audio');
+      sound.src = 'https://' + Config.routes.client + '/' + url;
+      sound.volume = this.effectVolume / 100;
+      this.soundCache[url] = sound;
+      return sound;
+    } catch (_unused) {
+      console.log(_unused)
+    }
+  };
+  _proto2.
+
+  getSoundSpecial = function getSoundSpecial(url) {
+    if (!window.HTMLAudioElement) return;
+    if (this.soundCache[url]) return this.soundCache[url];
+    try {
+      var sound = document.createElement('audio');
+      sound.src = url;
+      sound.volume = this.effectVolume / 100;
+      this.soundCache[url] = sound;
+      return sound;
+    } catch (_unused) {
+      console.log(_unused)
+    }
+  };
+  _proto2.
+
+  playEffect = function playEffect(url) {
+    this.playSound(url, this.muted ? 0 : this.effectVolume);
+  };
+  _proto2.
+
+  playSound = function playSound(url, volume) {
+    if (!volume) return;
+    var effect = this.getSound(url);
+    if (effect) {
+      effect.volume = volume / 100;
+      effect.play();
+    }
+  };
+  _proto2.
+
+
+  loadBgm = function loadBgm(url, loopstart, loopend, replaceBGM) {
+    if (replaceBGM) {
+      replaceBGM.stop();
+      this.deleteBgm(replaceBGM);
+    }
+
+    var bgm = new BattleBGM(url, loopstart, loopend);
+    this.bgm.push(bgm);
+    return bgm;
+  };
+  _proto2.
+  deleteBgm = function deleteBgm(bgm) {
+    var soundIndex = BattleSound.bgm.indexOf(bgm);
+    if (soundIndex >= 0) BattleSound.bgm.splice(soundIndex, 1);
+  };
+  _proto2.
+
+  currentBgm = function currentBgm() {
+    if (!this.bgmVolume || this.muted) return false;
+    for (var _i2 = 0, _this$bgm =
+        this.bgm; _i2 < _this$bgm.length; _i2++) {
+      var bgm = _this$bgm[_i2];
+      if (bgm.isPlaying) return bgm;
+    }
+    return null;
+  };
+  _proto2.
+
+
+  setMute = function setMute(muted) {
+    muted = !!muted;
+    if (this.muted === muted) return;
+    this.muted = muted;
+    BattleBGM.update();
+  };
+  _proto2.
+
+  loudnessPercentToAmplitudePercent = function loudnessPercentToAmplitudePercent(loudnessPercent) {
+
+    var decibels = 10 * Math.log(loudnessPercent / 100) / Math.log(2);
+    return Math.pow(10, decibels / 20) * 100;
+  };
+  _proto2.
+  setBgmVolume = function setBgmVolume(bgmVolume) {
+    this.bgmVolume = this.loudnessPercentToAmplitudePercent(bgmVolume);
+    BattleBGM.update();
+  };
+  _proto2.
+  setEffectVolume = function setEffectVolume(effectVolume) {
+    this.effectVolume = this.loudnessPercentToAmplitudePercent(effectVolume);
+  };
+  return _class2;
 }())();
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // == PART 3 ==
- 
+
 BattleScene = function () {
   function BattleScene(battle, $frame, $logFrame) {
     this.battle = void 0;
@@ -341,7 +345,7 @@ BattleScene = function () {
     this.minDelay = 0;
     this.activeAnimations = $();
     this.battle = battle;
- 
+
     $frame.addClass('battle');
     this.$frame = $frame;
     this.log = new BattleLog($logFrame[0], this);
@@ -357,7 +361,7 @@ BattleScene = function () {
       if (pokemonId.charAt(2) === ':') return pokemonId.slice(3).trim();
       return '???pokemon:' + pokemonId + '???';
     };
- 
+
     var numericId = 0;
     if (battle.id) {
       numericId = parseInt(battle.id.slice(battle.id.lastIndexOf('-') + 1), 10);
@@ -369,47 +373,47 @@ BattleScene = function () {
     this.numericId = numericId;
     this.tooltips = new BattleTooltips(battle);
     this.tooltips.listen($frame[0]);
- 
+
     this.preloadEffects();
- 
+
   }
   var _proto = BattleScene.prototype;
   _proto.
- 
+
   reset = function reset() {
     this.updateGen();
- 
- 
- 
- 
+
+
+
+
     if (this.$options) {
       this.log.reset();
     } else {
       this.$options = $('<div class="battle-options"></div>');
       $(this.log.elem).prepend(this.$options);
     }
- 
- 
- 
- 
+
+
+
+
     this.$frame.empty();
     this.$battle = $('<div class="innerbattle"></div>');
     this.$frame.append(this.$battle);
- 
+
     this.$bg = $('<div class="backdrop" style="background-image:url(' + Dex.resourcePrefix + this.backdropImage + ');display:block;opacity:0.8"></div>');
     this.$terrain = $('<div class="weather"></div>');
     this.$weather = $('<div class="weather"></div>');
     this.$bgEffect = $('<div></div>');
     this.$sprite = $('<div></div>');
- 
+
     this.$sprites = [$('<div></div>'), $('<div></div>')];
     this.$spritesFront = [$('<div></div>'), $('<div></div>')];
- 
+
     this.$sprite.append(this.$sprites[1]);
     this.$sprite.append(this.$spritesFront[1]);
     this.$sprite.append(this.$spritesFront[0]);
     this.$sprite.append(this.$sprites[0]);
- 
+
     this.$stat = $('<div role="complementary" aria-label="Active Pokemon"></div>');
     this.$fx = $('<div></div>');
     this.$leftbar = $('<div class="leftbar" role="complementary" aria-label="Your Team"></div>');
@@ -419,7 +423,7 @@ BattleScene = function () {
     this.$delay = $('<div></div>');
     this.$hiddenMessage = $('<div class="message" style="position:absolute;display:block;visibility:hidden"></div>');
     this.$tooltips = $('<div class="tooltips"></div>');
- 
+
     this.$battle.append(this.$bg);
     this.$battle.append(this.$terrain);
     this.$battle.append(this.$weather);
@@ -434,33 +438,33 @@ BattleScene = function () {
     this.$battle.append(this.$delay);
     this.$battle.append(this.$hiddenMessage);
     this.$battle.append(this.$tooltips);
- 
+
     if (!this.animating) {
       this.$battle.append('<div class="seeking"><strong>seeking...</strong></div>');
     }
- 
+
     this.messagebarOpen = false;
     this.timeOffset = 0;
     this.pokemonTimeOffset = 0;
     this.curTerrain = '';
     this.curWeather = '';
- 
+
     this.log.battleParser.perspective = this.battle.mySide.sideid;
- 
+
     this.resetSides(true);
   };
   _proto.
- 
+
   animationOff = function animationOff() {
     this.$battle.append('<div class="seeking"><strong>seeking...</strong></div>');
     this.stopAnimation();
- 
+
     this.animating = false;
     this.$messagebar.empty().css({
       opacity: 0,
       height: 0
     });
- 
+
   };
   _proto.
   stopAnimation = function stopAnimation() {
@@ -521,10 +525,10 @@ BattleScene = function () {
     this.timeOffset += time;
   };
   _proto.
- 
- 
- 
- 
+
+
+
+
   addSprite = function addSprite(sprite) {
     if (sprite.$el) this.$sprites[+sprite.isFrontSprite].append(sprite.$el);
   };
@@ -539,14 +543,14 @@ BattleScene = function () {
     if (!end.xscale && end.xscale !== 0 && start.xscale) end.xscale = start.xscale;
     if (!end.yscale && end.yscale !== 0 && start.yscale) end.yscale = start.yscale;
     end = Object.assign({}, start, end);
- 
+
     var startpos = this.pos(start, effect);
     var endpos = this.posT(end, effect, transition, start);
- 
+
     var $effect = $('<img src="' + effect.url + '" style="display:block;position:absolute" />');
     this.$fx.append($effect);
     $effect = this.$fx.children().last();
- 
+
     if (start.time) {
       $effect.css(Object.assign({}, startpos, {
         opacity: 0
@@ -585,7 +589,7 @@ BattleScene = function () {
       display: 'block',
       opacity: 0
     });
- 
+
     this.$bgEffect.append($effect);
     $effect.delay(delay).animate({
         opacity: opacity
@@ -597,13 +601,13 @@ BattleScene = function () {
       250);
   };
   _proto.
- 
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
+
   pos = function pos(loc, obj) {
     loc = Object.assign({
         x: 0,
@@ -613,17 +617,17 @@ BattleScene = function () {
         opacity: 1
       },
       loc);
- 
+
     if (!loc.xscale && loc.xscale !== 0) loc.xscale = loc.scale;
     if (!loc.yscale && loc.yscale !== 0) loc.yscale = loc.scale;
- 
+
     var left = 210;
     var top = 245;
     var scale = obj.gen === 5 ?
       2.0 - loc.z / 200 :
       1.5 - 0.5 * (loc.z / 200);
     if (scale < .1) scale = .1;
- 
+
     left += (410 - 190) * (loc.z / 200);
     top += (135 - 245) * (loc.z / 200);
     left += Math.floor(loc.x * scale);
@@ -633,7 +637,7 @@ BattleScene = function () {
     var hoffset = Math.floor((obj.h - (obj.y || 0) * 2) * scale * loc.yscale);
     left -= Math.floor(width / 2);
     top -= Math.floor(hoffset / 2);
- 
+
     var pos = {
       left: left,
       top: top,
@@ -641,16 +645,16 @@ BattleScene = function () {
       height: height,
       opacity: loc.opacity
     };
- 
+
     if (loc.display) pos.display = loc.display;
     return pos;
   };
   _proto.
- 
- 
- 
- 
- 
+
+
+
+
+
   posT = function posT(loc, obj, transition, oldLoc) {
     var pos = this.pos(loc, obj);
     var oldPos = oldLoc ? this.pos(oldLoc, obj) : null;
@@ -661,7 +665,7 @@ BattleScene = function () {
       height: 'linear',
       opacity: 'linear'
     };
- 
+
     if (transition === 'ballistic') {
       transitionMap.top = pos.top < oldPos.top ? 'ballisticUp' : 'ballisticDown';
     }
@@ -672,10 +676,10 @@ BattleScene = function () {
       transitionMap.top = pos.top < oldPos.top ? 'quadUp' : 'quadDown';
     }
     if (transition === 'ballistic2Back') {
- 
- 
- 
- 
+
+
+
+
       transitionMap.top = loc.z > 0 ? 'quadUp' : 'quadDown';
     }
     if (transition === 'ballistic2Under') {
@@ -706,15 +710,15 @@ BattleScene = function () {
       height: [pos.height, transitionMap.height],
       opacity: [pos.opacity, transitionMap.opacity]
     };
- 
+
   };
   _proto.
- 
+
   waitFor = function waitFor(elem) {
     this.activeAnimations = this.activeAnimations.add(elem);
   };
   _proto.
- 
+
   startAnimations = function startAnimations() {
     this.$fx.empty();
     this.activeAnimations = $();
@@ -722,7 +726,7 @@ BattleScene = function () {
     this.minDelay = 0;
   };
   _proto.
- 
+
   finishAnimations = function finishAnimations() {
     if (this.minDelay || this.timeOffset) {
       this.$delay.delay(Math.max(this.minDelay, this.timeOffset));
@@ -732,10 +736,10 @@ BattleScene = function () {
     return this.activeAnimations.promise();
   };
   _proto.
- 
- 
- 
- 
+
+
+
+
   preemptCatchup = function preemptCatchup() {
     this.log.preemptCatchup();
   };
@@ -751,7 +755,7 @@ BattleScene = function () {
           opacity: 0,
           height: 'auto'
         });
- 
+
         this.$messagebar.animate({
             opacity: 1
           },
@@ -769,7 +773,7 @@ BattleScene = function () {
         display: 'block',
         opacity: 0
       });
- 
+
       $message.animate({
           height: 'hide'
         },
@@ -812,10 +816,10 @@ BattleScene = function () {
     return false;
   };
   _proto.
- 
- 
- 
- 
+
+
+
+
   runMoveAnim = function runMoveAnim(moveid, participants) {
     if (!this.animating) return;
     var animEntry = BattleMoveAnims[moveid];
@@ -831,7 +835,7 @@ BattleScene = function () {
     }));
   };
   _proto.
- 
+
   runOtherAnim = function runOtherAnim(moveid, participants) {
     if (!this.animating) return;
     BattleOtherAnims[moveid].anim(this, participants.map(function (p) {
@@ -839,7 +843,7 @@ BattleScene = function () {
     }));
   };
   _proto.
- 
+
   runStatusAnim = function runStatusAnim(moveid, participants) {
     if (!this.animating) return;
     BattleStatusAnims[moveid].anim(this, participants.map(function (p) {
@@ -847,13 +851,13 @@ BattleScene = function () {
     }));
   };
   _proto.
- 
+
   runResidualAnim = function runResidualAnim(moveid, pokemon) {
     if (!this.animating) return;
     BattleMoveAnims[moveid].residualAnim(this, [pokemon.sprite]);
   };
   _proto.
- 
+
   runPrepareAnim = function runPrepareAnim(moveid, attacker, defender) {
     if (!this.animating || this.acceleration >= 3) return;
     var moveAnim = BattleMoveAnims[moveid];
@@ -861,7 +865,7 @@ BattleScene = function () {
     moveAnim.prepareAnim(this, [attacker.sprite, defender.sprite]);
   };
   _proto.
- 
+
   updateGen = function updateGen() {
     var _this$battle$nearSide;
     var gen = this.battle.gen;
@@ -869,7 +873,7 @@ BattleScene = function () {
     if (Dex.prefs('bwgfx') && gen > 5) gen = 5;
     this.gen = gen;
     this.activeCount = ((_this$battle$nearSide = this.battle.nearSide) == null ? void 0 : _this$battle$nearSide.active.length) || 1;
- 
+
     var isSPL = typeof this.battle.rated === 'string' && this.battle.rated.startsWith("Smogon Premier League");
     var bg;
     if (isSPL) {
@@ -896,14 +900,14 @@ BattleScene = function () {
       else
         bg = 'sprites/gen6bgs/' + BattleBackdrops[this.numericId % BattleBackdrops.length];
     }
- 
+
     this.backdropImage = bg;
     if (this.$bg) {
       this.$bg.css('background-image', 'url(' + Dex.resourcePrefix + '' + this.backdropImage + ')');
     }
   };
   _proto.
- 
+
   getDetailsText = function getDetailsText(pokemon) {
     var _pokemon$side;
     var name = (_pokemon$side = pokemon.side) != null && _pokemon$side.isFar && (
@@ -933,10 +937,10 @@ BattleScene = function () {
   _proto.
   getSidebarHTML = function getSidebarHTML(side, posStr) {
     var noShow = this.battle.hardcoreMode && this.battle.gen < 7;
- 
+
     var speciesOverage = this.battle.speciesClause ? Infinity : Math.max(side.pokemon.length - side.totalPokemon, 0);
     var sidebarIcons =
- 
+
       [];
     var speciesTable = [];
     var zoroarkRevealed = false;
@@ -976,7 +980,7 @@ BattleScene = function () {
     while (sidebarIcons.length < 6) {
       sidebarIcons.push(['empty', null]);
     }
- 
+
     var pokemonhtml = '';
     for (var _i5 = 0; _i5 < sidebarIcons.length; _i5++) {
       var _sidebarIcons$_i = sidebarIcons[_i5],
@@ -999,8 +1003,8 @@ BattleScene = function () {
       } else if (!poke) {
         pokemonhtml += "<span class=\"picon\" style=\"" + Dex.getPokemonIcon('pokeball') + "\" title=\"Not revealed\" aria-label=\"Not revealed\"></span>";
       } else if (!poke.ident && this.battle.teamPreviewCount && this.battle.teamPreviewCount < side.pokemon.length) {
- 
- 
+
+
         var details = this.getDetailsText(poke);
         pokemonhtml += "<span" + tooltipCode + " style=\"" + Dex.getPokemonIcon(poke, !side.isFar) + (";opacity:0.6\" aria-label=\"" + details + "\"></span>");
       } else {
@@ -1028,7 +1032,7 @@ BattleScene = function () {
   _proto.
   updateLeftSidebar = function updateLeftSidebar() {
     var side = this.battle.nearSide;
- 
+
     if (side.ally) {
       var side2 = side.ally;
       this.$leftbar.html(this.getSidebarHTML(side, 'near2') + this.getSidebarHTML(side2, 'near'));
@@ -1042,7 +1046,7 @@ BattleScene = function () {
   _proto.
   updateRightSidebar = function updateRightSidebar() {
     var side = this.battle.farSide;
- 
+
     if (side.ally) {
       var side2 = side.ally;
       this.$rightbar.html(this.getSidebarHTML(side, 'far2') + this.getSidebarHTML(side2, 'far'));
@@ -1071,7 +1075,7 @@ BattleScene = function () {
     }
   };
   _proto.
- 
+
   resetSides = function resetSides(skipEmpty) {
     if (!skipEmpty) {
       for (var _i8 = 0, _this$$sprites =
@@ -1086,7 +1090,7 @@ BattleScene = function () {
       var side = _this$battle$sides3[_i9];
       side.z = side.isFar ? 200 : 0;
       (_side$missedPokemon = side.missedPokemon) == null ? void 0 : (_side$missedPokemon$s = _side$missedPokemon.sprite) == null ? void 0 : _side$missedPokemon$s.destroy();
- 
+
       side.missedPokemon = {
         sprite: new PokemonSprite(null, {
             x: side.leftof(-100),
@@ -1096,8 +1100,8 @@ BattleScene = function () {
           },
           this, side.isFar)
       };
- 
- 
+
+
       side.missedPokemon.sprite.isMissedPokemon = true;
     }
     if (this.battle.sides.length > 2 && this.sideConditions.length === 2) {
@@ -1109,8 +1113,8 @@ BattleScene = function () {
   rebuildTooltips = function rebuildTooltips() {
     var tooltipBuf = '';
     var tooltips = this.battle.gameType === 'freeforall' ? {
- 
- 
+
+
       p2b: {
         top: 70,
         left: 250,
@@ -1183,7 +1187,7 @@ BattleScene = function () {
         tooltip: 'activepokemon|0|2'
       }
     };
- 
+
     for (var _id in tooltips) {
       var layout = tooltips[_id];
       tooltipBuf += "<div class=\"has-tooltip\" style=\"position:absolute;";
@@ -1193,7 +1197,7 @@ BattleScene = function () {
     this.$tooltips.html(tooltipBuf);
   };
   _proto.
- 
+
   teamPreview = function teamPreview() {
     var newBGNum = 0;
     for (var siden = 0; siden < 2 || this.battle.gameType === 'multi' && siden < 4; siden++) {
@@ -1203,7 +1207,7 @@ BattleScene = function () {
       var buf = '';
       var buf2 = '';
       this.$sprites[spriteIndex].empty();
- 
+
       var ludicoloCount = 0;
       var lombreCount = 0;
       for (var i = 0; i < side.pokemon.length; i++) {
@@ -1213,13 +1217,13 @@ BattleScene = function () {
         }
         if (pokemon.speciesForme === 'Ludicolo') ludicoloCount++;
         if (pokemon.speciesForme === 'Lombre') lombreCount++;
- 
+
         var spriteData = Dex.getSpriteData(pokemon, !!spriteIndex, {
           gen: this.gen,
           noScale: true,
           mod: this.mod
         });
- 
+
         var y = 0;
         var x = 0;
         if (spriteIndex) {
@@ -1232,7 +1236,7 @@ BattleScene = function () {
         if (textBuf) textBuf += ' / ';
         textBuf += pokemon.speciesForme;
         var _url = spriteData.url;
- 
+
         buf += '<img src="' + _url + '" width="' + spriteData.w + '" height="' + spriteData.h + '" style="position:absolute;top:' + Math.floor(y - spriteData.h / 2) + 'px;left:' + Math.floor(x - spriteData.w / 2) + 'px" />';
         buf2 += '<div style="position:absolute;top:' + (y + 45) + 'px;left:' + (x - 40) + 'px;width:80px;font-size:10px;text-align:center;color:#FFF;">';
         var gender = pokemon.gender;
@@ -1253,10 +1257,10 @@ BattleScene = function () {
       if (textBuf) {
         this.log.addDiv('chat battle-history',
           '<strong>' + BattleLog.escapeHTML(side.name) + '\'s team:</strong> <em style="color:#445566;display:block;">' + BattleLog.escapeHTML(textBuf) + '</em>');
- 
+
       }
       this.$sprites[spriteIndex].html(buf + buf2);
- 
+
       if (!newBGNum) {
         if (ludicoloCount >= 2) {
           newBGNum = -3;
@@ -1272,7 +1276,7 @@ BattleScene = function () {
     this.updateSidebars();
   };
   _proto.
- 
+
   showJoinButtons = function showJoinButtons() {
     if (!this.battle.joinButtons) return;
     if (this.battle.ended || this.battle.rated) return;
@@ -1289,7 +1293,7 @@ BattleScene = function () {
     this.$battle.find('.playbutton1, .playbutton2').remove();
   };
   _proto.
- 
+
   pseudoWeatherLeft = function pseudoWeatherLeft(pWeather) {
     var buf = '<br />' + Dex.moves.get(pWeather[0]).name;
     if (!pWeather[1] && pWeather[2]) {
@@ -1310,7 +1314,7 @@ BattleScene = function () {
     if (!cond[2] && !cond[3] && !all) return '';
     var buf = "<br />" + (isFoe && !all ? "Foe's " : "") + Dex.moves.get(cond[0]).name;
     if (this.battle.gen < 7 && this.battle.hardcoreMode) return buf;
- 
+
     if (!cond[2] && !cond[3]) return buf;
     if (!cond[2] && cond[3]) {
       cond[2] = cond[3];
@@ -1324,9 +1328,9 @@ BattleScene = function () {
   _proto.
   weatherLeft = function weatherLeft() {
     if (this.battle.gen < 7 && this.battle.hardcoreMode) return '';
- 
+
     var weatherhtml = "";
- 
+
     if (this.battle.weather) {
       var weatherNameTable = {
         sunnyday: 'Sun',
@@ -1337,7 +1341,7 @@ BattleScene = function () {
         hail: 'Hail',
         deltastream: 'Strong Winds'
       };
- 
+
       weatherhtml = "" + (weatherNameTable[this.battle.weather] || this.battle.weather);
       if (this.battle.weatherMinTimeLeft !== 0) {
         weatherhtml += " <small>(" + this.battle.weatherMinTimeLeft + " or " + this.battle.weatherTimeLeft + " turns)</small>";
@@ -1348,12 +1352,12 @@ BattleScene = function () {
       weatherhtml = "" + (nullifyWeather ? '<s>' : '') + weatherhtml + (nullifyWeather ? '</s>' : '');
     }
     for (var _i10 = 0, _this$battle$pseudoWe =
- 
+
         this.battle.pseudoWeather; _i10 < _this$battle$pseudoWe.length; _i10++) {
       var pseudoWeather = _this$battle$pseudoWe[_i10];
       weatherhtml += this.pseudoWeatherLeft(pseudoWeather);
     }
- 
+
     return weatherhtml;
   };
   _proto.
@@ -1400,12 +1404,12 @@ BattleScene = function () {
           if (!terrain) terrain = 'pseudo';
           break;
       }
- 
+
     }
     if (weather === 'desolateland' || weather === 'primordialsea' || weather === 'deltastream') {
       isIntense = true;
     }
- 
+
     var weatherhtml = this.weatherLeft();
     for (var _i12 = 0, _this$battle$sides4 =
         this.battle.sides; _i12 < _this$battle$sides4.length; _i12++) {
@@ -1413,7 +1417,7 @@ BattleScene = function () {
       weatherhtml += this.sideConditionsLeft(side);
     }
     if (weatherhtml) weatherhtml = "<br />" + weatherhtml;
- 
+
     if (instant) {
       this.$weather.html('<em>' + weatherhtml + '</em>');
       if (this.curWeather === weather && this.curTerrain === terrain) return;
@@ -1424,7 +1428,7 @@ BattleScene = function () {
       this.curWeather = weather;
       return;
     }
- 
+
     if (weather !== this.curWeather) {
       this.$weather.animate({
           opacity: 0
@@ -1441,7 +1445,7 @@ BattleScene = function () {
     } else {
       this.$weather.html('<em>' + weatherhtml + '</em>');
     }
- 
+
     if (terrain !== this.curTerrain) {
       this.$terrain.animate({
           top: 360,
@@ -1469,7 +1473,7 @@ BattleScene = function () {
   _proto.
   incrementTurn = function incrementTurn() {
     if (!this.animating) return;
- 
+
     var turn = this.battle.turn;
     if (turn <= 0) return;
     var $prevTurn = this.$turn.children();
@@ -1478,7 +1482,7 @@ BattleScene = function () {
       opacity: 0,
       left: 160
     });
- 
+
     this.$turn.append($newTurn);
     $newTurn.animate({
         opacity: 1,
@@ -1509,7 +1513,7 @@ BattleScene = function () {
     }
   };
   _proto.
- 
+
   addPokemonSprite = function addPokemonSprite(pokemon) {
     var sprite = new PokemonSprite(Dex.getSpriteData(pokemon, pokemon.side.isFar, {
         gen: this.gen,
@@ -1525,7 +1529,7 @@ BattleScene = function () {
     return sprite;
   };
   _proto.
- 
+
   addSideCondition = function addSideCondition(siden, id, instant) {
     if (!this.animating) return;
     var side = this.battle.sides[siden];
@@ -1552,7 +1556,7 @@ BattleScene = function () {
           opacity: 0.3,
           time: instant ? 0 : 300
         });
- 
+
         break;
       case 'reflect':
         var reflect = new Sprite(BattleEffects.reflect, {
@@ -1575,7 +1579,7 @@ BattleScene = function () {
           opacity: 0.3,
           time: instant ? 0 : 300
         });
- 
+
         break;
       case 'safeguard':
         var safeguard = new Sprite(BattleEffects.safeguard, {
@@ -1598,7 +1602,7 @@ BattleScene = function () {
           opacity: 0.3,
           time: instant ? 0 : 300
         });
- 
+
         break;
       case 'lightscreen':
         var lightscreen = new Sprite(BattleEffects.lightscreen, {
@@ -1621,7 +1625,7 @@ BattleScene = function () {
           opacity: 0.3,
           time: instant ? 0 : 300
         });
- 
+
         break;
       case 'mist':
         var mist = new Sprite(BattleEffects.mist, {
@@ -1644,7 +1648,7 @@ BattleScene = function () {
           opacity: 0.3,
           time: instant ? 0 : 300
         });
- 
+
         break;
       case 'stealthrock':
         var rock1 = new Sprite(BattleEffects.rock1, {
@@ -1656,7 +1660,7 @@ BattleScene = function () {
             scale: 0.2
           },
           this);
- 
+
         var rock2 = new Sprite(BattleEffects.rock2, {
             display: 'block',
             x: side.leftof(-20),
@@ -1666,7 +1670,7 @@ BattleScene = function () {
             scale: 0.2
           },
           this);
- 
+
         var rock3 = new Sprite(BattleEffects.rock1, {
             display: 'block',
             x: side.leftof(30),
@@ -1676,7 +1680,7 @@ BattleScene = function () {
             scale: 0.2
           },
           this);
- 
+
         var rock4 = new Sprite(BattleEffects.rock2, {
             display: 'block',
             x: side.leftof(10),
@@ -1686,7 +1690,7 @@ BattleScene = function () {
             scale: 0.2
           },
           this);
- 
+
         this.$spritesFront[spriteIndex].append(rock1.$el);
         this.$spritesFront[spriteIndex].append(rock2.$el);
         this.$spritesFront[spriteIndex].append(rock3.$el);
@@ -1721,7 +1725,7 @@ BattleScene = function () {
             scale: 0.8
           },
           this);
- 
+
         this.$spritesFront[spriteIndex].append(surge1.$el);
         this.$spritesFront[spriteIndex].append(surge2.$el);
         this.$spritesFront[spriteIndex].append(surge3.$el);
@@ -1817,7 +1821,7 @@ BattleScene = function () {
         this.sideConditions[siden][id] = [web];
         break;
     }
- 
+
   };
   _proto.
   removeSideCondition = function removeSideCondition(siden, id) {
@@ -1843,7 +1847,7 @@ BattleScene = function () {
     }
   };
   _proto.
- 
+
   typeAnim = function typeAnim(pokemon, types) {
     var result = BattleLog.escapeHTML(types).split('/').map(function (type) {
       return (
@@ -1904,7 +1908,7 @@ BattleScene = function () {
     if (!this.animating) return;
     if (!pokemon.sprite.$statbar) return;
     pokemon.sprite.updateHPText(pokemon);
- 
+
     var $hp = pokemon.sprite.$statbar.find('div.hp');
     var w = pokemon.hpWidth(150);
     var hpcolor = BattleScene.getHPColor(pokemon);
@@ -1919,10 +1923,10 @@ BattleScene = function () {
         $hp.addClass('hp-yellow hp-red');
       };
     }
- 
+
     if (damage === '100%' && pokemon.hp > 0) damage = '99%';
     this.resultAnim(pokemon, this.battle.hardcoreMode ? 'Damage' : '&minus;' + damage, 'bad');
- 
+
     $hp.animate({
         width: w,
         'border-right-width': w ? 1 : 0
@@ -1934,7 +1938,7 @@ BattleScene = function () {
     if (!this.animating) return;
     if (!pokemon.sprite.$statbar) return;
     pokemon.sprite.updateHPText(pokemon);
- 
+
     var $hp = pokemon.sprite.$statbar.find('div.hp');
     var w = pokemon.hpWidth(150);
     var hpcolor = BattleScene.getHPColor(pokemon);
@@ -1949,9 +1953,9 @@ BattleScene = function () {
         $hp.removeClass('hp-red');
       };
     }
- 
+
     this.resultAnim(pokemon, this.battle.hardcoreMode ? 'Heal' : '+' + damage, 'good');
- 
+
     $hp.animate({
         width: w,
         'border-right-width': w ? 1 : 0
@@ -1959,10 +1963,10 @@ BattleScene = function () {
       350, callback);
   };
   _proto.
- 
- 
- 
- 
+
+
+
+
   removeEffect = function removeEffect(pokemon, id, instant) {
     return pokemon.sprite.removeEffect(id, instant);
   };
@@ -2027,10 +2031,10 @@ BattleScene = function () {
     return pokemon.sprite.afterMove();
   };
   _proto.
- 
- 
- 
- 
+
+
+
+
   setFrameHTML = function setFrameHTML(html) {
     this.customControls = true;
     this.$frame.html(html);
@@ -2042,7 +2046,7 @@ BattleScene = function () {
     $controls.html(html);
   };
   _proto.
- 
+
   preloadImage = function preloadImage(url) {
     var _this4 = this;
     var token = url.replace(/\.(gif|png)$/, '').replace(/\//g, '-');
@@ -2074,7 +2078,7 @@ BattleScene = function () {
   setBgm = function setBgm(bgmNum) {
     if (this.bgmNum === bgmNum) return;
     this.bgmNum = bgmNum;
- 
+
     switch (bgmNum) {
       case -1:
         this.bgm = BattleSound.loadBgm('https://play.pokemonshowdown.com/audio/bw2-homika-dogars.mp3', 1661, 68131, this.bgm);
@@ -2088,8 +2092,8 @@ BattleScene = function () {
       case -101:
         this.bgm = BattleSound.loadBgm('https://play.pokemonshowdown.com/audio/spl-elite4.mp3', 3962, 152509, this.bgm);
         break;
- 
-            
+
+
       case 1:
         this.bgm = BattleSound.loadBgm('https://github.com/OpenSauce04/ssmm-showdown/raw/master/music/xy-elite4.mp3', 133673, 261675, this.bgm);
         break;
@@ -2105,30 +2109,30 @@ BattleScene = function () {
       case 5:
         this.bgm = BattleSound.loadBgm('https://github.com/OpenSauce04/ssmm-showdown/raw/master/music/bdsp-galactic-admin.mp3', 119450, 176991, this.bgm);
         break;
-      
+
       case 6:
       default:
         this.bgm = BattleSound.loadBgm('https://play.pokemonshowdown.com/audio/sm-trainer.mp3', 8323, 89230, this.bgm);
         break;
     }
- 
- 
+
+
     this.updateBgm();
   };
   _proto.
   updateBgm = function updateBgm() {
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
+
+
+
     var nowPlaying =
       this.battle.turn >= 0 && !this.battle.ended && !this.battle.paused;
- 
+
     if (nowPlaying) {
       if (!this.bgm) this.rollBgm();
       this.bgm.resume();
